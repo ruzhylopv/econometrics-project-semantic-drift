@@ -1,12 +1,30 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-def prepare_wiki_df(df: pd.DataFrame):
+def prepare_wiki_df(df: pd.DataFrame, drop_no_text = False, sample="normal"):
+
+
     df = df[df["minor"] == False]
-    df = df[df.intro_text.isna().astype(int) == 0]
+    if drop_no_text:
+        df = df[df.intro_text.isna().astype(int) == 0]
+
+    df['is_revert'] = (df['sha1'] == df['sha1'].shift(2)).astype(int)
     df["timestamp"] = pd.to_datetime(df["timestamp"])
     df.set_index("timestamp", inplace=True)
     return df
+
+def get_aggregated_wiki_stats(df: pd.DataFrame, sample="W"):
+    agg = df.resample(sample).agg({
+        'is_revert': 'sum',
+        'user': 'nunique',
+        'sha1': 'count'
+    }).rename(columns={
+        'is_revert': 'reverts',
+        'user': 'unique_editors',
+        'sha1': 'total_edits'
+    })
+    return agg
+
 
 def prepare_stock_df(df: pd.DataFrame):
     df["Date"] = pd.to_datetime(df["Date"], utc=True)
