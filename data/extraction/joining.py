@@ -35,6 +35,8 @@ tesla["Date"] = tesla["Date"].dt.tz_convert("America/New_York").dt.normalize()
 tesla = tesla.sort_values("Date").set_index("Date")
 
 log_return = compute_log_return(tesla["Close"])
+tsla_volume = tesla["Volume"]
+tsla_volume.name = "tsla_volume"
 log_return.name = "log_return"
 
 
@@ -45,7 +47,9 @@ sp500.index = sp500.index.tz_localize("America/New_York").normalize()
 sp500 = sp500.sort_index()
 
 mkt_return = compute_log_return(sp500["Close"])
+mkt_volume = sp500["Volume"]
 mkt_return.name = "mkt_return"
+mkt_volume.name = "mkt_volume"
 
 
 # ---------- VIEWS ----------
@@ -89,6 +93,8 @@ msk_tweets.name = "msk_tweets"
 series_list = [
     log_return,
     mkt_return,
+    tsla_volume,
+    mkt_volume,
     tsla_wiki_views,
     tsla_edits,
     tsla_unique_editors,
