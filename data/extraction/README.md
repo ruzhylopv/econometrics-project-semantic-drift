@@ -20,10 +20,11 @@ pip install pandas mwparserfromhell requests ipython
 
 ### Option 1: use existing CSV
 Contains revisions for "Tesla, Inc." article.
+
 ```python
 import pandas as pd
 
-data_path = 'revisions_with_text.csv'
+data_path = 'WIKI_tesla.csv'
 df = pd.read_csv(data_path)
 print(df.head())
 ```
